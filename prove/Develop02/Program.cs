@@ -3,9 +3,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Collections.Generic;
 using System.IO;
 
-// Class diagrams at bottom.
-// I added a mood scale attribute to each entry.
-
 public class Entry
 {
     public string date;
@@ -17,7 +14,7 @@ public class Entry
     {
         Console.WriteLine($"Date: {date} - Prompt: {question}");
         Console.WriteLine($"Mood: {mood}/10");
-        Console.WriteLine($"{entryText}\n"); 
+        Console.WriteLine($"{entryText}\n");
     }
 }
 
@@ -136,7 +133,7 @@ class Program
             {
                 Console.Write("What's the filename? ");
                 string fileName = Console.ReadLine();
-                
+
                 if (File.Exists(fileName))
                 {
                     theJournal.LoadFromFile(fileName);
@@ -154,30 +151,3 @@ class Program
         }
     }
 }
-
-// Class Diagrams
-
-// 1. Entry class
-// A container for one journal record
-// Attributes: (all strings) entryText, question, date
-// Behavior: Display() (prints entry)
-
-// 2. Journal class
-// Handles the collection of entries
-// Attributes: List<Entry> for storing entries
-// Behaviors: DisplayAll(), AddEntry, SaveToFile, LoadFromFile
-
-// 3. PromptGenerator class
-// Attributes: List<string> at last 5 prompts
-// Behavior: GetRandomPrompt() returns 1 string from list
-
-// Program Overview
-// 1. Initilization: 
-// Creates one PromptGenerator object and one Journal object.
-// 2. Loop: 
-// Use a while loop to show all options.
-// 3. User Decision:
-// A. Write (Give random prompt, show user, get response, get date using DateTime.Now.ToShortDateString(), add new entry to journal. 
-// B. Display (use Journal.DisplayAll() method)
-// C. Save/Load (ask user for filename and then call that journal method, use | or ~ between prompt, date, and text entry when using line.Split("|"))
-// D. Quit
