@@ -28,7 +28,7 @@ public class Activity
         ShowSpinner(5);
     }
 
-    public void DisplayEndingMeassage()
+    public void DisplayEndingMessage()
     {
         Console.WriteLine();
         Console.WriteLine("Good job!");
@@ -58,7 +58,7 @@ public class Activity
 
     public void ShowCountDown(int numSeconds)
     {
-        for (int i = numSeconds; i > i--)
+        for (int i = numSeconds; i > 0;i--)
         {
             Console.Write(i);
             Thread.Sleep(1000);
