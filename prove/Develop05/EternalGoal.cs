@@ -10,7 +10,7 @@ public class EternalGoal : Goal
         return _points;
     }
 
-    public override bool Iscomplete()
+    public override bool IsComplete()
     {
         return false;
     }

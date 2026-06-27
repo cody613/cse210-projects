@@ -28,9 +28,14 @@ public class ChecklistGoal : Goal
         return 0;
     }
 
+    public override bool IsComplete()
+    {
+        return _amountCompleted >= _target;
+    }
+
     public override string GetDetailsString()
     {
-        string checkbox = IsComplete() ? "[X]" : "[]";
+        string checkbox = IsComplete() ? "[X]" : "[ ]";
         return $"{checkbox} {_shortName} ({_description}) -- Currently Completed: {_amountCompleted}/{_target}";
     }
 

@@ -60,6 +60,31 @@ public class GoalManager
     public void DisplayScore()
     {
         Console.WriteLine($"\nYou have {_score} points.");
+        Console.WriteLine($"Current Rank: {DetermineRank()}");
+    }
+
+    public string DetermineRank()
+    {
+        if (_score >= 10000)
+        {
+            return "Grand Maestro";
+        }
+        else if (_score >= 5000)
+        {
+            return "Lead Soloist";
+        }
+        else if (_score >= 2500)
+        {
+            return "First Chair Pianist";
+        }
+        else if (_score >= 1000)
+        {
+            return "Sheet Music Reader";
+        }
+        else
+        {
+            return "Scale Practicer";
+        }
     }
 
     public void ListGoalDetails()
@@ -111,5 +136,87 @@ public class GoalManager
     {
         ListGoalDetails();
         Console.Write("Which goal did you complete? ");
+
+        if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= _goals.Count)
+        {
+            string oldRank = DetermineRank();
+
+            int earnedPoints = _goals[index - 1].RecordEvent();
+            _score += earnedPoints;
+
+            string newRank = DetermineRank();
+
+            Console.WriteLine($"Congrats! You've earned {earnedPoints} points!");
+
+            if (oldRank != newRank)
+            {
+                Console.WriteLine($"LEVEL UP! You're now a {newRank}!\n");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid goal choice.");
+        }
+    }
+
+    public void SaveGoals()
+    {
+        Console.Write("Provide a filename for the goal file? ");
+        string filename = Console.ReadLine();
+
+        using (StreamWriter outputFile = new StreamWriter(filename))
+        {
+            outputFile.WriteLine(_score);
+            foreach (Goal goal in _goals)
+            {
+                outputFile.WriteLine(goal.GetStringRepresentation());
+            }
+        }
+    }
+
+    public void LoadGoals()
+    {
+        Console.Write("What's the filename of the goal file? ");
+        string filename = Console.ReadLine();
+
+        if (File.Exists(filename))
+        {
+            string[] lines = File.ReadAllLines(filename);
+
+            _score = int.Parse(lines[0]);
+            _goals.Clear();
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string[] parts = lines[i].Split(':');
+                string type = parts[0];
+                string[] details = parts[1].Split(',');
+
+                string name = details [0];
+                string desc = details[1];
+                int points = int.Parse(details[2]);
+
+                if (type == "SimpleGoal")
+                {
+                    bool isComplete = bool.Parse(details[3]);
+                    _goals.Add(new SimpleGoal(name,desc, points, isComplete));
+                }
+                else if (type == "EternalGoal")
+                {
+                    _goals.Add(new EternalGoal(name, desc, points));
+                }
+                else if (type == "ChecklistGoal")
+                {
+                    int bonus = int.Parse(details[3]);
+                    int target = int.Parse(details[4]);
+                    int amountCompleted = int.Parse(details[5]);
+                    _goals.Add(new ChecklistGoal(name, desc, points, target, bonus, amountCompleted));
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("File not found.");
+        }
     }
 }
